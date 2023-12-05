@@ -4,9 +4,11 @@ import 'package:chatbot/app/app.dialogs.dart';
 import 'package:chatbot/app/app.locator.dart';
 import 'package:chatbot/app/app.router.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  usePathUrlStrategy();
   await setupLocator();
   setupDialogUi();
   setupBottomSheetUi();

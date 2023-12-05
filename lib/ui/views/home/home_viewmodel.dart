@@ -1,28 +1,27 @@
 import 'package:chatbot/app/app.bottomsheets.dart';
 import 'package:chatbot/app/app.dialogs.dart';
 import 'package:chatbot/app/app.locator.dart';
+import 'package:chatbot/app/app.router.dart';
 import 'package:chatbot/ui/common/app_strings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class HomeViewModel extends BaseViewModel {
+import '../../../model/chat_model.dart';
+
+class HomeViewModel extends FormViewModel {
   final _dialogService = locator<DialogService>();
   final _bottomSheetService = locator<BottomSheetService>();
+  final _navigationService = locator<NavigationService>();
 
-  String get counterLabel => 'Counter is: $_counter';
+// rebuildUi();
 
-  int _counter = 0;
-
-  void incrementCounter() {
-    _counter++;
-    rebuildUi();
-  }
+  get chatHistory => dummyHistory;
 
   void showDialog() {
     _dialogService.showCustomDialog(
       variant: DialogType.infoAlert,
       title: 'Stacked Rocks!',
-      description: 'Give stacked $_counter stars on Github',
+      description: 'Give stacked stars on Github',
     );
   }
 
@@ -33,4 +32,16 @@ class HomeViewModel extends BaseViewModel {
       description: ksHomeBottomSheetDescription,
     );
   }
+
+  setNewBaseLink() {}
+
+  resetBaseLink() {}
+
+  exportHistory() {}
+
+  void logout() {
+    _navigationService.replaceWithStartupView();
+  }
+
+  void sendQuery() {}
 }

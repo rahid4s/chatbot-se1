@@ -4,6 +4,9 @@
         "*.dart": "${capture}.mobile.dart, ${capture}.tablet.dart, ${capture}.desktop.dart, ${capture}.form.dart, ${capture}.g.dart, ${capture}.freezed.dart, ${capture}.logger.dart, ${capture}.locator.dart, ${capture}.router.dart, ${capture}.dialogs.dart, ${capture}.bottomsheets.dart"
     },
     "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "cSpell.words": [
+        "viewmodel"
+    ]
 }
 

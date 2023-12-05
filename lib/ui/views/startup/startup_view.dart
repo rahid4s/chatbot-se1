@@ -1,3 +1,5 @@
+import 'package:chatbot/ui/common/color.dart';
+import 'package:chatbot/ui/common/data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
@@ -20,8 +22,11 @@ class StartupView extends StackedView<StartupViewModel> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'STACKED',
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
+              '${AppData.appName}.',
+              style: TextStyle(
+                  fontSize: 60,
+                  fontWeight: FontWeight.w900,
+                  color: AppColor.accent),
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
