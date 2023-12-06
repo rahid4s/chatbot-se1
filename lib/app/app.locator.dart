@@ -12,6 +12,8 @@ import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_shared/stacked_shared.dart';
 
 import '../services/authentication_service.dart';
+import 'repository/authentication_repo.dart';
+import 'repository/chatbot_repo.dart';
 
 final locator = StackedLocator.instance;
 
@@ -28,4 +30,6 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => NavigationService());
   locator.registerSingleton(AuthenticationService());
+  locator.registerLazySingleton(() => AuthenticationRepo());
+  locator.registerLazySingleton(() => ChatBotRepo());
 }

@@ -11,8 +11,7 @@ Widget loading({
     height: size,
     width: size,
     alignment: center ? Alignment.center : null,
-    padding:
-        hasPadding ? EdgeInsets.all(padding ?? tinySize) : EdgeInsets.zero,
+    padding: hasPadding ? EdgeInsets.all(padding ?? tinySize) : EdgeInsets.zero,
     child: const CircularProgressIndicator(),
   );
 }

@@ -5,7 +5,7 @@ import '../app.locator.dart';
 import '../app.router.dart';
 
 void fakeAuthGuard() {
-  if (locator<AuthenticationService>().userLoggedIn()) {
+  if (locator<AuthenticationService>().userIsLoggedIn()) {
     locator<NavigationService>().replaceWithHomeView();
   } else {
     locator<NavigationService>().replaceWithLoginView();

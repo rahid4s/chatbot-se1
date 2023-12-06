@@ -1,5 +1,6 @@
 import 'package:chatbot/ui/common/button_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:chatbot/ui/common/app_colors.dart';
 import 'package:chatbot/ui/common/ui_helpers.dart';
@@ -39,10 +40,21 @@ class HomeView extends StackedView<HomeViewModel> with $HomeView {
                         fontWeight: FontWeight.w900,
                         color: AppColor.accent),
                   ),
-                  const Text('SERVER'),
+                  DropdownButton(
+                    value: viewModel.selectedLLM,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    items: ['LLM1', 'LLM2'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) =>
+                        viewModel.changeLLM(newValue),
+                  ),
                   const SizedBox(width: 10),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
+                  Flexible(
+                    // width: MediaQuery.of(context).size.width / 2,
                     child: TextField(
                       controller: serverLinkController,
                       decoration: const InputDecoration(
@@ -63,12 +75,14 @@ class HomeView extends StackedView<HomeViewModel> with $HomeView {
                     textColor: Colors.white,
                   ),
                   horizontalSpaceTiny,
-                  ButtonUi(
-                    onPressed: viewModel.exportHistory,
-                    text: 'EXPORT',
-                    textColor: Colors.white,
-                  ),
-                  horizontalSpaceTiny,
+                  if (viewModel.showExport) ...[
+                    ButtonUi(
+                      onPressed: viewModel.exportHistory,
+                      text: 'EXPORT',
+                      textColor: Colors.white,
+                    ),
+                    horizontalSpaceTiny,
+                  ],
                   DropdownButton(
                     value: 'Account',
                     icon: const Icon(Icons.arrow_drop_down),
@@ -102,12 +116,12 @@ class HomeView extends StackedView<HomeViewModel> with $HomeView {
                     child: Column(
                       children: [
                         ListTile(
-                          leading: const Text('You: '),
-                          title: Text(viewModel.chatHistory[index].question),
+                          leading: const Text('You '),
+                          title: Text(viewModel.chatHistory[index].query),
                         ),
                         ListTile(
-                          leading: const Text('ChatBOT: '),
-                          title: Text(viewModel.chatHistory[index].answer),
+                          leading: const Text('ChatBOT '),
+                          title: Text(viewModel.chatHistory[index].response),
                         ),
                       ],
                     ),
@@ -131,9 +145,7 @@ class HomeView extends StackedView<HomeViewModel> with $HomeView {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {
-                      viewModel.sendQuery();
-                    },
+                    onPressed: viewModel.sendQuery,
                     icon: const Icon(Icons.send),
                   ),
                 ],
@@ -151,4 +163,17 @@ class HomeView extends StackedView<HomeViewModel> with $HomeView {
     BuildContext context,
   ) =>
       HomeViewModel();
+
+  @override
+  void onViewModelReady(HomeViewModel viewModel) {
+    syncFormWithViewModel(viewModel);
+    SchedulerBinding.instance
+        .addPostFrameCallback((timeStamp) => viewModel.runStartupLogic());
+  }
+
+  @override
+  void onDispose(HomeViewModel viewModel) {
+    super.onDispose(viewModel);
+    disposeForm();
+  }
 }

@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:chatbot/ui/common/data.dart';
 import 'package:dio/dio.dart';
+
+import '../../ui/common/show_dialog.dart';
 /* import 'package:http/http.dart' as http; */
 
 class AuthenticationRepo {
   final dio = Dio();
 
-  Future<dynamic> login({email, password}) async {
+  Future<Map<String, dynamic>> login({email, password}) async {
     try {
       final formData = FormData.fromMap({
         'email': email,
@@ -15,12 +19,15 @@ class AuthenticationRepo {
           await dio.post('${AppData.baseAPI}/v1/login-user', data: formData);
 
       if (response.statusCode == 200) {
-        return response.data;
+        Map<String, dynamic> data = response.data['data'];
+        return data;
       } else {
-        return 'An Error Occurred: ${response.statusCode}';
+        showApiDialog('An Error Occurred: ${response.statusCode}');
+        return {};
       }
     } catch (e) {
-      return e;
+      showApiDialog('An Error Occurred: $e');
+      return {};
     }
   }
 
@@ -35,12 +42,15 @@ class AuthenticationRepo {
           await dio.post('${AppData.baseAPI}/v1/sign-user', data: formData);
 
       if (response.statusCode == 200) {
-        return response.data;
+        Map<String, dynamic> data = response.data['data'];
+        return data;
       } else {
-        return 'An Error Occurred: ${response.statusCode}';
+        showApiDialog('An Error Occurred: ${response.statusCode}');
+        return {};
       }
     } catch (e) {
-      return e;
+      showApiDialog('An Error Occurred: $e');
+      return {};
     }
   }
 }

@@ -3,36 +3,47 @@ import 'package:chatbot/ui/common/data.dart';
 
 import 'package:dio/dio.dart';
 
+import '../../ui/common/show_dialog.dart';
+
 class ChatBotRepo {
   final dio = Dio();
 
-  Future<dynamic> sendMsg({query, uid}) async {
+  Future<String> sendMsg({
+    required String query,
+    int? uid,
+    required String link,
+    required int llm,
+  }) async {
     try {
       final formData = FormData.fromMap({
         'query': query,
         'id': uid,
+        'llm': llm,
       });
 
       var urlEndPoint = 'anonymousMessage';
-      if (uid == null || isBlankString(uid)) {
-        urlEndPoint = 'sendMessage';
-      } else {
+      if (uid == null) {
         urlEndPoint = 'anonymousMessage';
+      } else {
+        urlEndPoint = 'sendMessage';
       }
       Response response =
-          await dio.post('${AppData.baseAPI}/v1/$urlEndPoint', data: formData);
+          await dio.post('$link/v1/$urlEndPoint', data: formData);
 
       if (response.statusCode == 200) {
-        return response.data;
+        String data = response.data['response'];
+        return data;
       } else {
-        return 'An Error Occurred: ${response.statusCode}';
+        showApiDialog('An Error Occurred: ${response.statusCode}');
+        return '';
       }
     } catch (e) {
-      return e;
+      showApiDialog('An Error Occurred: $e');
+      return '';
     }
   }
 
-  Future<dynamic> getHistory({uid}) async {
+  Future<List<dynamic>> getHistory({uid}) async {
     try {
       final formData = FormData.fromMap({
         'id': uid,
@@ -42,12 +53,15 @@ class ChatBotRepo {
           data: formData);
 
       if (response.statusCode == 200) {
-        return response.data;
+        List<dynamic> data = response.data['response'];
+        return data;
       } else {
-        return 'An Error Occurred: ${response.statusCode}';
+        showApiDialog('An Error Occurred: ${response.statusCode}');
+        return [];
       }
     } catch (e) {
-      return e;
+      showApiDialog('An Error Occurred: $e');
+      return [];
     }
   }
 }
