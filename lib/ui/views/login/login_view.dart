@@ -54,7 +54,7 @@ class LoginView extends StackedView<LoginViewModel> with $LoginView {
               ButtonUi(
                 text: 'Login',
                 textColor: Colors.white,
-                onPressed: viewModel.login,
+                onPressed: viewModel.signin,
                 disabled: viewModel.isBusy,
               ),
               verticalSpaceSmall,

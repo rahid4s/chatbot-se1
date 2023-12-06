@@ -64,20 +64,20 @@ class HomeView extends StackedView<HomeViewModel> with $HomeView {
                   ),
                   horizontalSpaceTiny,
                   ButtonUi(
-                    onPressed: viewModel.setNewBaseLink,
+                    onPressed: viewModel.serverSelect,
                     text: 'SET',
                     textColor: Colors.white,
                   ),
                   horizontalSpaceTiny,
                   ButtonUi(
-                    onPressed: viewModel.resetBaseLink,
+                    onPressed: viewModel.resetServer,
                     text: 'RESET',
                     textColor: Colors.white,
                   ),
                   horizontalSpaceTiny,
                   if (viewModel.showExport) ...[
                     ButtonUi(
-                      onPressed: viewModel.exportHistory,
+                      onPressed: viewModel.export,
                       text: 'EXPORT',
                       textColor: Colors.white,
                     ),
@@ -145,7 +145,7 @@ class HomeView extends StackedView<HomeViewModel> with $HomeView {
                     ),
                   ),
                   IconButton(
-                    onPressed: viewModel.sendQuery,
+                    onPressed: viewModel.sendChat,
                     icon: const Icon(Icons.send),
                   ),
                 ],

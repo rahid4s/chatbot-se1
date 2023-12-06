@@ -55,5 +55,14 @@
       });
     });
   </script>
+  <script src="packages/printing/printing.js"></script>
+  <script>
+    // Register the plugin with the platform.
+    flutter.postMessage({
+      type: 'registerWith',
+      value: 'printing',
+    });
+  </script>
+  
 </body>
 </html>

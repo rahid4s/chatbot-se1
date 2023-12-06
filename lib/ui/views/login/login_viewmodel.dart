@@ -16,7 +16,7 @@ class LoginViewModel extends FormViewModel {
   final _authService = locator<AuthenticationService>();
   final _authRepo = locator<AuthenticationRepo>();
 
-  login() async {
+  signin() async {
     Map<String, dynamic> result =
         await _authRepo.login(email: usernameValue, password: passwordValue);
 

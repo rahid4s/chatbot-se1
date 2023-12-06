@@ -17,7 +17,7 @@ class SigninViewModel extends FormViewModel {
     _navigationService.replaceWithLoginView();
   }
 
-  signin() async {
+  signup() async {
     Map<String, dynamic> result =
         await _authRepo.register(email: usernameValue, password: passwordValue);
 

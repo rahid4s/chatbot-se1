@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'dart:html' as html;
 import 'package:chatbot/app/app.bottomsheets.dart';
 import 'package:chatbot/app/app.dialogs.dart';
 import 'package:chatbot/app/app.locator.dart';
@@ -10,6 +12,7 @@ import 'package:chatbot/app/util/string_list_helper.dart';
 import 'package:chatbot/ui/common/app_strings.dart';
 import 'package:chatbot/ui/common/data.dart';
 import 'package:chatbot/ui/views/home/home_view.form.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:pdf/pdf.dart';
@@ -39,8 +42,7 @@ class HomeViewModel extends FormViewModel {
 
   List<ChatModel> _chatHistory = [];
 
-  //List<ChatModel> get chatHistory => dummyHistory; // local test dummy
-  List<ChatModel> get chatHistoryLocal => dummyHistory; // local test dummy
+  //List<ChatModel> get chatHistoryLocal => dummyHistory; // local test dummy
   List<ChatModel> get chatHistory => _chatHistory.reversed.toList();
 
   runStartupLogic() {
@@ -58,6 +60,9 @@ class HomeViewModel extends FormViewModel {
         ChatModel chat = ChatModel(
           query: historyItem['query'],
           response: historyItem['answer'],
+          userId: historyItem['userId'],
+          id: historyItem['id'],
+          timestamp: DateTime.parse(historyItem['created_at']),
         );
         _chatHistory.add(chat);
       }
@@ -82,42 +87,50 @@ class HomeViewModel extends FormViewModel {
     );
   } */
 
-  setNewBaseLink() {
+  serverSelect() {
     if (!isBlankString(serverLinkValue)) {
       _severLink = serverLinkValue!;
       rebuildUi();
     }
   }
 
-  resetBaseLink() {
+  resetServer() {
     _severLink = AppData.baseAPI;
     serverLinkValue = _severLink;
     rebuildUi();
   }
 
-  exportHistory() async {
-    await generatePDF(chatHistoryLocal);
+  export() async {
+    await generatePDF(chatHistory);
   }
 
-  Future<void> generatePDF(List<ChatModel> chats) async {
+  Future generatePDF(List<ChatModel> chats) async {
     final pdf = pw.Document();
-    final font = await PdfGoogleFonts.nunitoExtraLight();
-    pdf.addPage(
-      pw.Page(
-        build: (context) => pw.Column(
-          children: chats.map((ChatModel chat) {
-            return pw.Text(
-              'Q: ${chat.query} \n A: ${chat.response} | (${chat.timestamp?.toLocal()})',
-              style: pw.TextStyle(fontSize: 12, font: font),
-            );
-          }).toList(),
-        ),
-      ),
-    );
 
-    // Print the PDF
-    await Printing.layoutPdf(
-        onLayout: (PdfPageFormat format) async => pdf.save());
+    //final font = await GoogleFonts.getFont('Noto Sans');
+    final font = await PdfGoogleFonts.nunitoExtraLight();
+
+    pdf.addPage(pw.Page(
+      pageFormat: PdfPageFormat.a4,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: chats.map((ChatModel chat) {
+          return pw.Text(
+            'Q: ${chat.query} \n A: ${chat.response} \n (${chat.timestamp?.toLocal()}) \n\n',
+            style: pw.TextStyle(
+              fontSize: 12,
+              font: font,
+            ),
+          );
+        }).toList(),
+      ),
+    ));
+
+    final bytes = await pdf.save();
+    await Printing.sharePdf(
+      bytes: bytes,
+      filename: 'history-${DateTime.now().microsecondsSinceEpoch}.pdf',
+    );
   }
 
   void logout() {
@@ -125,7 +138,7 @@ class HomeViewModel extends FormViewModel {
     fakeAuthGuard();
   }
 
-  sendQuery() async {
+  sendChat() async {
     if (!isBlankString(queryValue)) {
       String result = await _chatbotRepo.sendMsg(
         query: queryValue!.trim(),

@@ -54,7 +54,7 @@ class SigninView extends StackedView<SigninViewModel> with $SigninView {
               ButtonUi(
                 text: 'Register',
                 textColor: Colors.white,
-                onPressed: viewModel.signin,
+                onPressed: viewModel.signup,
                 disabled: viewModel.isBusy,
               ),
               verticalSpaceSmall,
