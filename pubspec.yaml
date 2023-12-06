@@ -19,7 +19,9 @@ dependencies:
   url_launcher: null
   figma_squircle: null
   logger: null
-  auto_size_text: 
+  auto_size_text: null 
+  dio: null
+ #  http: ^1.1.2
 
 dev_dependencies:
   build_runner: ^2.4.7
